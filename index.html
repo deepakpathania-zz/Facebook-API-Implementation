@@ -1,6 +1,9 @@
 <html>
 	<head>
 		<title>FB API test</title>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    	<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
 		<script>
@@ -13,10 +16,14 @@
 		    FB.AppEvents.logPageView();
 		    FB.getLoginStatus(function(response) {
 		    	if(response.status === 'connected') {
-		    		document.getElementById('status').innerHTML = 'connected';
+		    		document.getElementById('status').innerHTML = 'Connected with the application';
+		    		document.getElementById('login').innerHTML = "Already logged in.";
 		    	}
 		    	else if (response.status === 'not_authorized') {
-		    		document.getElementById('status').innerHTML = 'not connected';	
+		    		document.getElementById('status').innerHTML = 'Not connected with the application';	
+		    	} 
+		    	else {
+		    		document.getElementById('status').innerHTML = 'Not logged in with facebook';
 		    	}
 		    });
 
@@ -29,7 +36,32 @@
 		     js.src = "//connect.facebook.net/en_US/sdk.js";
 		     fjs.parentNode.insertBefore(js, fjs);
 		   }(document, 'script', 'facebook-jssdk'));
+
+		  function login() {
+		  	FB.login(function(response) {
+		  		if(response.status === 'connected') {
+		    		document.getElementById('status').innerHTML = 'Connected with the application';
+		    	}
+		    	else if (response.status === 'not_authorized') {
+		    		document.getElementById('status').innerHTML = 'Not connected with the application';	
+		    	} 
+		    	else {
+		    		document.getElementById('status').innerHTML = 'Not logged in with facebook';
+		    	}
+		  	});
+		  	FB.api('/me', function(response) {
+  				console.log(response);
+			});
+		  }
 		</script>
-		<div id="status"></div>
+		<header id="top" class="header">
+        <div class="text-vertical-center">
+            <h1>FB API Implementation</h1>
+            <div id="status"></div>
+            <br>
+            <button onclick="login()" class="btn btn-dark btn-lg" id="login">Log in</button>
+        </div>
+    	</header>
+		
 	</body>
 </html>	
