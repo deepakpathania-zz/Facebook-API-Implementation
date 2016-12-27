@@ -9,7 +9,7 @@
 		<script>
 		  window.fbAsyncInit = function() {
 		    FB.init({
-		      appId      : '1808086952764677',
+		      appId      : '1808446012728771',
 		      xfbml      : true,
 		      version    : 'v2.8'
 		    });
@@ -23,7 +23,6 @@
 		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	} else {
 		    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
-		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	}
 		    });
 		};
@@ -44,9 +43,8 @@
 		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	} else {
 		    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
-		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	}
-			}, {scope: 'publish_actions'});
+			}, {scope: 'manage_pages'});
 		}
 		// getting basic user info
 		function getInfo() {
@@ -55,7 +53,27 @@
 				document.getElementById('status').innerHTML = response.name + " : " + response.id;
 				document.getElementById('image').innerHTML =  "<img src='" + response.picture.data.url + "'>";
 			});
-		}
+			FB.api('/me/accounts',function(apiresponse){
+						var data=apiresponse['data'];
+						console.log(apiresponse);
+						var ids = new Array();
+						var names = new Array();
+						if(data.length) {
+							for(var i=0; i<data.length; i++){
+								ids[i]=data[i].id;
+								names[i] = data[i].name;
+								document.getElementById('pages').innerHTML = "You manage the page : " + names[i] + " with id : " + ids[i];
+							}
+							console.log(names + " : " + ids);
+						}
+						else {
+							document.getElementById('pages').innerHTML = "You manage no pages.";
+							console.log("no pages");
+						}
+				});
+				document.getElementById('getinfo').style.visibility = 'hidden';
+				document.getElementById('managepage').style.visibility = 'visible';
+			}
 
 		</script>
 		<header id="top" class="header">
@@ -63,9 +81,11 @@
             <h1>FB API Implementation</h1>
             <div id="status"></div>
             <div id="image"></div>
+            <div id="pages"></div>
             <br>
             <button onclick="login()" class="btn btn-dark btn-lg" id="login">Log in</button>
-            <button onclick = "getInfo()" class="btn btn-dark btn-lg" id="getinfo">Get Info</button>
+            <button onclick = "getInfo()" class="btn btn-dark btn-lg" id="getinfo">Get Info</button><br/>
+            <button class="btn btn-dark btn-lg" id="managepage" style="visibility:hidden">Manage Pages</button>
         </div>
     	</header>
 		
