@@ -16,10 +16,10 @@
 		    FB.AppEvents.logPageView();
 		    FB.getLoginStatus(function(response) {
 		    	if (response.status === 'connected') {
-		    		document.getElementById('status').innerHTML = 'We are connected.';
+		    		document.getElementById('status').innerHTML = 'Application is authorized';
 		    		document.getElementById('login').style.visibility = 'hidden';
 		    	} else if (response.status === 'not_authorized') {
-		    		document.getElementById('status').innerHTML = 'We are not logged in.'
+		    		document.getElementById('status').innerHTML = 'Application is not authorized'
 		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	} else {
 		    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
@@ -37,10 +37,10 @@
 		function login() {
 			FB.login(function(response) {
 				if (response.status === 'connected') {
-		    		document.getElementById('status').innerHTML = 'We are connected.';
+		    		document.getElementById('status').innerHTML = 'Application is authorized';
 		    		document.getElementById('login').style.visibility = 'hidden';
 		    	} else if (response.status === 'not_authorized') {
-		    		document.getElementById('status').innerHTML = 'We are not logged in.'
+		    		document.getElementById('status').innerHTML = 'Application is not authorized'
 		    		document.getElementById('getinfo').style.visibility = 'hidden';
 		    	} else {
 		    		document.getElementById('status').innerHTML = 'You are not logged into Facebook.';
@@ -50,8 +50,10 @@
 		}
 		// getting basic user info
 		function getInfo() {
-			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id'}, function(response) {
+			FB.api('/me', 'GET', {fields: 'first_name,last_name,name,id,picture.width(150).height(150)'}, function(response) {
+				console.log(response);
 				document.getElementById('status').innerHTML = response.name + " : " + response.id;
+				document.getElementById('image').innerHTML =  "<img src='" + response.picture.data.url + "'>";
 			});
 		}
 
@@ -60,7 +62,7 @@
         <div class="text-vertical-center">
             <h1>FB API Implementation</h1>
             <div id="status"></div>
-            <div id="user"></div>
+            <div id="image"></div>
             <br>
             <button onclick="login()" class="btn btn-dark btn-lg" id="login">Log in</button>
             <button onclick = "getInfo()" class="btn btn-dark btn-lg" id="getinfo">Get Info</button>
